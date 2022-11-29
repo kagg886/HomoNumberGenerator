@@ -1,0 +1,611 @@
+import java.util.*;
+
+public class Main {
+    private static final HashMap<Integer, String> homos = new HashMap<>();
+
+    public static void main(String[] args) throws Throwable {
+        int input = 214748382;
+        System.out.println(getHomoStack(input));
+        System.out.println((114514)*(((11+451)*4)+(11+4*5/1-4))+114*51*4+((1+1)*4514)+114*5*1*4+(1+1-4+5*14));
+    }
+
+    public static String getHomoStack(int input) throws Exception {
+        StringBuilder b = new StringBuilder();
+        List<Stack> stacks = getHomoStack(input, new ArrayList<>());
+        for (Stack s : stacks) {
+            b.append("+");
+            if (s.multiply == 1) {
+                if (s.data.contains("+") && s.data.contains("*")) {
+                    b.append("(").append(s.data).append(")");
+                    continue;
+                }
+                b.append(s.data);
+
+            } else {
+                b.append("(").append(s.data).append(")*").append("(").append(getHomoStack(s.multiply)).append(")");
+            }
+        }
+        return b.substring(1);
+    }
+
+    private static List<Stack> getHomoStack(int input, List<Stack> homoStacks) throws Exception {
+
+        //遍历已知Homo数
+        for (Map.Entry<Integer, String> homo : homos.entrySet()) {
+            if (homo.getKey().equals(input)) {
+                //遍历Homo栈，如果有这个数的话，直接在multiply处+1，避免重复生成对象
+                for (Stack p : homoStacks) {
+                    if (input == p.id) {
+                        p.multiply++;
+                        return homoStacks;
+                    }
+                }
+                homoStacks.add(new Stack(input));
+                return homoStacks;
+            }
+        }
+
+        //寻找比这个数小且表中已经存在的最大数
+        List<Integer> large = new ArrayList<>();
+        for (Map.Entry<Integer, String> homo : homos.entrySet()) {
+            //可能并不是有序的
+            if (input > homo.getKey()) {
+                large.add(homo.getKey());
+            }
+        }
+        int max = 0;
+        for (Integer s : large) {
+            max = Math.max(s,max);
+        }
+
+        for (Stack p : homoStacks) {
+            if (max == p.id) {
+                p.multiply++;
+                return getHomoStack(input - max,homoStacks);
+            }
+        }
+
+        Stack p = new Stack(max);
+        homoStacks.add(p);
+        return getHomoStack(input - max,homoStacks);
+    }
+
+
+    static class Stack {
+        private String data;
+
+        private int multiply = 1;
+
+        private int id;
+
+        public Stack(int data) throws Exception {
+            if (homos.getOrDefault(data, null) == null) {
+                throw new Exception("No Homo!");
+            }
+            this.id = data;
+            this.data = homos.get(data);
+        }
+    }
+
+    static {
+        homos.put(114514, "114514");
+        homos.put(58596, "114*514");
+        homos.put(49654, "11*4514");
+        homos.put(45804, "11451*4");
+        homos.put(23256, "114*51*4");
+        homos.put(22616, "11*4*514");
+        homos.put(19844, "11*451*4");
+        homos.put(16030, "1145*14");
+        homos.put(14515, "1+14514");
+        homos.put(14514, "1*14514");
+        homos.put(14513, "-1+14514");
+        homos.put(11455, "11451+4");
+        homos.put(11447, "11451-4");
+        homos.put(9028, "(1+1)*4514");
+        homos.put(8976, "11*4*51*4");
+        homos.put(7980, "114*5*14");
+        homos.put(7710, "(1+14)*514");
+        homos.put(7197, "1+14*514");
+        homos.put(7196, "1*14*514");
+        homos.put(7195, "-1+14*514");
+        homos.put(6930, "11*45*14");
+        homos.put(6682, "(1-14)*-514");
+        homos.put(6270, "114*(51+4)");
+        homos.put(5818, "114*51+4");
+        homos.put(5810, "114*51-4");
+        homos.put(5808, "(1+1451)*4");
+        homos.put(5805, "1+1451*4");
+        homos.put(5804, "1*1451*4");
+        homos.put(5803, "-1+1451*4");
+        homos.put(5800, "(1-1451)*-4");
+        homos.put(5725, "1145*(1+4)");
+        homos.put(5698, "11*(4+514)");
+        homos.put(5610, "-11*(4-514)");
+        homos.put(5358, "114*(51-4)");
+        homos.put(5005, "11*(451+4)");
+        homos.put(4965, "11*451+4");
+        homos.put(4957, "11*451-4");
+        homos.put(4917, "11*(451-4)");
+        homos.put(4584, "(1145+1)*4");
+        homos.put(4580, "1145*1*4");
+        homos.put(4576, "(1145-1)*4");
+        homos.put(4525, "11+4514");
+        homos.put(4516, "1+1+4514");
+        homos.put(4515, "1+1*4514");
+        homos.put(4514, "1-1+4514");
+        homos.put(4513, "-1*1+4514");
+        homos.put(4512, "-1-1+4514");
+        homos.put(4503, "-11+4514");
+        homos.put(4112, "(1+1)*4*514");
+        homos.put(3608, "(1+1)*451*4");
+        homos.put(3598, "(11-4)*514");
+        homos.put(3435, "-1145*(1-4)");
+        homos.put(3080, "11*4*5*14");
+        homos.put(3060, "(11+4)*51*4");
+        homos.put(2857, "1+14*51*4");
+        homos.put(2856, "1*14*51*4");
+        homos.put(2855, "-1+14*51*4");
+        homos.put(2850, "114*5*(1+4)");
+        homos.put(2736, "114*(5+1)*4");
+        homos.put(2652, "(1-14)*51*-4");
+        homos.put(2570, "1*(1+4)*514");
+        homos.put(2475, "11*45*(1+4)");
+        homos.put(2420, "11*4*(51+4)");
+        homos.put(2280, "114*5*1*4");
+        homos.put(2248, "11*4*51+4");
+        homos.put(2240, "11*4*51-4");
+        homos.put(2166, "114*(5+14)");
+        homos.put(2068, "11*4*(51-4)");
+        homos.put(2067, "11+4*514");
+        homos.put(2058, "1+1+4*514");
+        homos.put(2057, "1/1+4*514");
+        homos.put(2056, "1/1*4*514");
+        homos.put(2055, "-1/1+4*514");
+        homos.put(2054, "-1-1+4*514");
+        homos.put(2045, "-11+4*514");
+        homos.put(2044, "(1+145)*14");
+        homos.put(2031, "1+145*14");
+        homos.put(2030, "1*145*14");
+        homos.put(2029, "-1+145*14");
+        homos.put(2024, "11*(45+1)*4");
+        homos.put(2016, "-(1-145)*14");
+        homos.put(1980, "11*45*1*4");
+        homos.put(1936, "11*(45-1)*4");
+        homos.put(1848, "(11+451)*4");
+        homos.put(1824, "114*(5-1)*4");
+        homos.put(1815, "11+451*4");
+        homos.put(1808, "1*(1+451)*4");
+        homos.put(1806, "1+1+451*4");
+        homos.put(1805, "1+1*451*4");
+        homos.put(1804, "1-1+451*4");
+        homos.put(1803, "1*-1+451*4");
+        homos.put(1802, "-1-1+451*4");
+        homos.put(1800, "1*-(1-451)*4");
+        homos.put(1793, "-11+451*4");
+        homos.put(1760, "-(11-451)*4");
+        homos.put(1710, "114*-5*(1-4)");
+        homos.put(1666, "(114+5)*14");
+        homos.put(1632, "(1+1)*4*51*4");
+        homos.put(1542, "1*-(1-4)*514");
+        homos.put(1526, "(114-5)*14");
+        homos.put(1485, "11*-45*(1-4)");
+        homos.put(1456, "1+1451+4");
+        homos.put(1455, "1*1451+4");
+        homos.put(1454, "-1+1451+4");
+        homos.put(1448, "1+1451-4");
+        homos.put(1447, "1*1451-4");
+        homos.put(1446, "-1+1451-4");
+        homos.put(1428, "(11-4)*51*4");
+        homos.put(1386, "11*(4+5)*14");
+        homos.put(1260, "(1+1)*45*14");
+        homos.put(1159, "1145+14");
+        homos.put(1150, "1145+1+4");
+        homos.put(1149, "1145+1*4");
+        homos.put(1148, "1145-1+4");
+        homos.put(1142, "1145+1-4");
+        homos.put(1141, "1145-1*4");
+        homos.put(1140, "(1145-1)-4");
+        homos.put(1131, "1145-14");
+        homos.put(1100, "11*4*5*(1+4)");
+        homos.put(1056, "11*4*(5+1)*4");
+        homos.put(1050, "(11+4)*5*14");
+        homos.put(1036, "(1+1)*(4+514)");
+        homos.put(1026, "114*-(5-14)");
+        homos.put(1020, "1*(1+4)*51*4");
+        homos.put(981, "1+14*5*14");
+        homos.put(980, "1*14*5*14");
+        homos.put(979, "-1+14*5*14");
+        homos.put(910, "-(1-14)*5*14");
+        homos.put(906, "(1+1)*451+4");
+        homos.put(898, "(1+1)*451-4");
+        homos.put(894, "(1+1)*(451-4)");
+        homos.put(880, "11*4*5*1*4");
+        homos.put(836, "11*4*(5+14)");
+        homos.put(827, "11+4*51*4");
+        homos.put(825, "(11+4)*(51+4)");
+        homos.put(818, "1+1+4*51*4");
+        homos.put(817, "1*1+4*51*4");
+        homos.put(816, "1*1*4*51*4");
+        homos.put(815, "-1+1*4*51*4");
+        homos.put(814, "-1-1+4*51*4");
+        homos.put(805, "-11+4*51*4");
+        homos.put(784, "(11+45)*14");
+        homos.put(771, "1+14*(51+4)");
+        homos.put(770, "1*14*(51+4)");
+        homos.put(769, "(11+4)*51+4");
+        homos.put(761, "(1+14)*51-4");
+        homos.put(730, "(1+145)*(1+4)");
+        homos.put(726, "1+145*(1+4)");
+        homos.put(725, "1*145*(1+4)");
+        homos.put(724, "-1-145*-(1+4)");
+        homos.put(720, "(1-145)*-(1+4)");
+        homos.put(719, "1+14*51+4");
+        homos.put(718, "1*14*51+4");
+        homos.put(717, "-1-14*-51+4");
+        homos.put(715, "(1-14)*-(51+4)");
+        homos.put(711, "1+14*51-4");
+        homos.put(710, "1*14*51-4");
+        homos.put(709, "-1+14*51-4");
+        homos.put(705, "(1+14)*(51-4)");
+        homos.put(704, "11*4*(5-1)*4");
+        homos.put(688, "114*(5+1)+4");
+        homos.put(680, "114*(5+1)-4");
+        homos.put(667, "-(1-14)*51+4");
+        homos.put(660, "(114+51)*4");
+        homos.put(659, "1+14*(51-4)");
+        homos.put(658, "1*14*(51-4)");
+        homos.put(657, "-1+14*(51-4)");
+        homos.put(649, "11*(45+14)");
+        homos.put(644, "1*(1+45)*14");
+        homos.put(641, "11+45*14");
+        homos.put(632, "1+1+45*14");
+        homos.put(631, "1*1+45*14");
+        homos.put(630, "1*1*45*14");
+        homos.put(629, "1*-1+45*14");
+        homos.put(628, "114+514");
+        homos.put(619, "-11+45*14");
+        homos.put(616, "1*-(1-45)*14");
+        homos.put(612, "-1*(1-4)*51*4");
+        homos.put(611, "(1-14)*-(51-4)");
+        homos.put(609, "11*(4+51)+4");
+        homos.put(601, "11*(4+51)-4");
+        homos.put(595, "(114+5)*(1+4)");
+        homos.put(584, "114*5+14");
+        homos.put(581, "1+145*1*4");
+        homos.put(580, "1*145/1*4");
+        homos.put(579, "-1+145*1*4");
+        homos.put(576, "1*(145-1)*4");
+        homos.put(575, "114*5+1+4");
+        homos.put(574, "114*5/1+4");
+        homos.put(573, "114*5-1+4");
+        homos.put(567, "114*5+1-4");
+        homos.put(566, "114*5*1-4");
+        homos.put(565, "114*5-1-4");
+        homos.put(561, "11/4*51*4");
+        homos.put(560, "(1+1)*4*5*14");
+        homos.put(558, "11*4+514");
+        homos.put(556, "114*5-14");
+        homos.put(545, "(114-5)*(1+4)");
+        homos.put(529, "1+14+514");
+        homos.put(528, "1*14+514");
+        homos.put(527, "-1+14+514");
+        homos.put(522, "(1+1)*4+514");
+        homos.put(521, "11-4+514");
+        homos.put(520, "1+1+4+514");
+        homos.put(519, "1+1*4+514");
+        homos.put(518, "1-1+4+514");
+        homos.put(517, "-1+1*4+514");
+        homos.put(516, "-1-1+4+514");
+        homos.put(514, "(1-1)/4+514");
+        homos.put(513, "-11*(4-51)-4");
+        homos.put(512, "1+1-4+514");
+        homos.put(511, "1*1-4+514");
+        homos.put(510, "1-1-4+514");
+        homos.put(509, "11*45+14");
+        homos.put(508, "-1-1-4+514");
+        homos.put(507, "-11+4+514");
+        homos.put(506, "-(1+1)*4+514");
+        homos.put(502, "11*(45+1)-4");
+        homos.put(501, "1-14+514");
+        homos.put(500, "11*45+1+4");
+        homos.put(499, "11*45*1+4");
+        homos.put(498, "11*45-1+4");
+        homos.put(495, "11*(4+5)*(1+4)");
+        homos.put(492, "11*45+1-4");
+        homos.put(491, "11*45-1*4");
+        homos.put(490, "11*45-1-4");
+        homos.put(488, "11*(45-1)+4");
+        homos.put(481, "11*45-14");
+        homos.put(480, "11*(45-1)-4");
+        homos.put(476, "(114+5)/1*4");
+        homos.put(470, "-11*4+514");
+        homos.put(466, "11+451+4");
+        homos.put(460, "114*(5-1)+4");
+        homos.put(458, "11+451-4");
+        homos.put(457, "1+1+451+4");
+        homos.put(456, "1*1+451+4");
+        homos.put(455, "1-1+451+4");
+        homos.put(454, "-1+1*451+4");
+        homos.put(453, "-1-1+451+4");
+        homos.put(452, "114*(5-1)-4");
+        homos.put(450, "(1+1)*45*(1+4)");
+        homos.put(449, "1+1+451-4");
+        homos.put(448, "1+1*451-4");
+        homos.put(447, "1/1*451-4");
+        homos.put(446, "1*-1+451-4");
+        homos.put(445, "-1-1+451-4");
+        homos.put(444, "-11+451+4");
+        homos.put(440, "(1+1)*4*(51+4)");
+        homos.put(438, "(1+145)*-(1-4)");
+        homos.put(436, "-11+451-4");
+        homos.put(435, "-1*145*(1-4)");
+        homos.put(434, "-1-145*(1-4)");
+        homos.put(432, "(1-145)*(1-4)");
+        homos.put(412, "(1+1)*4*51+4");
+        homos.put(404, "(1+1)*4*51-4");
+        homos.put(400, "-114+514");
+        homos.put(396, "11*4*-(5-14)");
+        homos.put(385, "(11-4)*(51+4)");
+        homos.put(376, "(1+1)*4*(51-4)");
+        homos.put(375, "(1+14)*5*(1+4)");
+        homos.put(368, "(1+1)*(45+1)*4");
+        homos.put(363, "(1+1451)/4");
+        homos.put(361, "(11-4)*51+4");
+        homos.put(360, "(1+1)*45*1*4");
+        homos.put(357, "(114+5)*-(1-4)");
+        homos.put(353, "(11-4)*51-4");
+        homos.put(352, "(1+1)*(45-1)*4");
+        homos.put(351, "1+14*-5*-(1+4)");
+        homos.put(350, "1*(1+4)*5*14");
+        homos.put(349, "-1+14*5*(1+4)");
+        homos.put(341, "11*(45-14)");
+        homos.put(337, "1-14*-(5+1)*4");
+        homos.put(336, "1*14*(5+1)*4");
+        homos.put(335, "-1+14*(5+1)*4");
+        homos.put(329, "(11-4)*(51-4)");
+        homos.put(327, "-(114-5)*(1-4)");
+        homos.put(325, "-(1-14)*5*(1+4)");
+        homos.put(318, "114+51*4");
+        homos.put(312, "(1-14)*-(5+1)*4");
+        homos.put(300, "(11+4)*5/1*4");
+        homos.put(297, "-11*(4+5)*(1-4)");
+        homos.put(291, "11+4*5*14");
+        homos.put(286, "(1145-1)/4");
+        homos.put(285, "(11+4)*(5+14)");
+        homos.put(282, "1+1+4*5*14");
+        homos.put(281, "1+14*5/1*4");
+        homos.put(280, "1-1+4*5*14");
+        homos.put(279, "1*-1+4*5*14");
+        homos.put(278, "-1-1+4*5*14");
+        homos.put(275, "1*(1+4)*(51+4)");
+        homos.put(270, "(1+1)*45*-(1-4)");
+        homos.put(269, "-11+4*5*14");
+        homos.put(268, "11*4*(5+1)+4");
+        homos.put(267, "1+14*(5+14)");
+        homos.put(266, "1*14*(5+14)");
+        homos.put(265, "-1+14*(5+14)");
+        homos.put(260, "1*(14+51)*4");
+        homos.put(259, "1*(1+4)*51+4");
+        homos.put(257, "(1+1)/4*514");
+        homos.put(252, "(114-51)*4");
+        homos.put(251, "1*-(1+4)*-51-4");
+        homos.put(248, "11*4+51*4");
+        homos.put(247, "-(1-14)*(5+14)");
+        homos.put(240, "(11+4)*(5-1)*4");
+        homos.put(236, "11+45*(1+4)");
+        homos.put(235, "1*(1+4)*(51-4)");
+        homos.put(234, "11*4*5+14");
+        homos.put(231, "11+4*(51+4)");
+        homos.put(230, "1*(1+45)*(1+4)");
+        homos.put(229, "1145/(1+4)");
+        homos.put(227, "1+1+45*(1+4)");
+        homos.put(226, "1*1+45*(1+4)");
+        homos.put(225, "11*4*5+1+4");
+        homos.put(224, "11*4*5/1+4");
+        homos.put(223, "11*4*5-1+4");
+        homos.put(222, "1+1+4*(51+4)");
+        homos.put(221, "1/1+4*(51+4)");
+        homos.put(220, "1*1*(4+51)*4");
+        homos.put(219, "1+14+51*4");
+        homos.put(218, "1*14+51*4");
+        homos.put(217, "11*4*5+1-4");
+        homos.put(216, "11*4*5-1*4");
+        homos.put(215, "11*4*5-1-4");
+        homos.put(214, "-11+45*(1+4)");
+        homos.put(212, "(1+1)*4+51*4");
+        homos.put(211, "11-4+51*4");
+        homos.put(210, "1+1+4+51*4");
+        homos.put(209, "1+1*4*51+4");
+        homos.put(208, "1*1*4+51*4");
+        homos.put(207, "-1+1*4*51+4");
+        homos.put(206, "11*4*5-14");
+        homos.put(204, "(1-1)/4+51*4");
+        homos.put(202, "1+1-4+51*4");
+        homos.put(201, "1/1-4+51*4");
+        homos.put(200, "1/1*4*51-4");
+        homos.put(199, "1*-1+4*51-4");
+        homos.put(198, "-1-1+4*51-4");
+        homos.put(197, "-11+4+51*4");
+        homos.put(196, "-(1+1)*4+51*4");
+        homos.put(195, "(1-14)*5*(1-4)");
+        homos.put(192, "(1+1)*4*(5+1)*4");
+        homos.put(191, "1-14+51*4");
+        homos.put(190, "1*-14+51*4");
+        homos.put(189, "-11-4+51*4");
+        homos.put(188, "1-1-(4-51)*4");
+        homos.put(187, "1/-1+4*(51-4)");
+        homos.put(186, "1+1+(45+1)*4");
+        homos.put(185, "1-1*-(45+1)*4");
+        homos.put(184, "114+5*14");
+        homos.put(183, "-1+1*(45+1)*4");
+        homos.put(182, "1+1+45/1*4");
+        homos.put(181, "1+1*45*1*4");
+        homos.put(180, "1*1*45*1*4");
+        homos.put(179, "-1/1+45*1*4");
+        homos.put(178, "-1-1+45*1*4");
+        homos.put(177, "1+1*(45-1)*4");
+        homos.put(176, "1*1*(45-1)*4");
+        homos.put(175, "-1+1*(45-1)*4");
+        homos.put(174, "-1-1+(45-1)*4");
+        homos.put(172, "11*4*(5-1)-4");
+        homos.put(171, "114*(5+1)/4");
+        homos.put(170, "(11-45)*-(1+4)");
+        homos.put(169, "114+51+4");
+        homos.put(168, "(11+45)*-(1-4)");
+        homos.put(165, "11*-45/(1-4)");
+        homos.put(161, "114+51-4");
+        homos.put(160, "1+145+14");
+        homos.put(159, "1*145+14");
+        homos.put(158, "-1+145+14");
+        homos.put(157, "1*(1-4)*-51+4");
+        homos.put(154, "11*(4-5)*-14");
+        homos.put(152, "(1+1)*4*(5+14)");
+        homos.put(151, "1+145+1+4");
+        homos.put(150, "1+145*1+4");
+        homos.put(149, "1*145*1+4");
+        homos.put(148, "1*145-1+4");
+        homos.put(147, "-1+145-1+4");
+        homos.put(146, "11+45*-(1-4)");
+        homos.put(143, "1+145+1-4");
+        homos.put(142, "1+145*1-4");
+        homos.put(141, "1+145-1-4");
+        homos.put(140, "1*145-1-4");
+        homos.put(139, "-1+145-1-4");
+        homos.put(138, "-1*(1+45)*(1-4)");
+        homos.put(137, "1+1-45*(1-4)");
+        homos.put(136, "1*1-45*(1-4)");
+        homos.put(135, "-1/1*45*(1-4)");
+        homos.put(134, "114+5/1*4");
+        homos.put(133, "114+5+14");
+        homos.put(132, "1+145-14");
+        homos.put(131, "1*145-14");
+        homos.put(130, "-1+145-14");
+        homos.put(129, "114+5*-(1-4)");
+        homos.put(128, "1+1+(4+5)*14");
+        homos.put(127, "1-14*(5-14)");
+        homos.put(126, "1*(14-5)*14");
+        homos.put(125, "-1-14*(5-14)");
+        homos.put(124, "114+5+1+4");
+        homos.put(123, "114-5+14");
+        homos.put(122, "114+5-1+4");
+        homos.put(121, "11*(45-1)/4");
+        homos.put(120, "-(1+1)*4*5*(1-4)");
+        homos.put(118, "(1+1)*(45+14)");
+        homos.put(117, "(1-14)*(5-14)");
+        homos.put(116, "114+5+1-4");
+        homos.put(115, "114+5*1-4");
+        homos.put(114, "11*4+5*14");
+        homos.put(113, "114-5/1+4");
+        homos.put(112, "114-5-1+4");
+        homos.put(111, "11+4*5*(1+4)");
+        homos.put(110, "-(11-451)/4");
+        homos.put(107, "11-4*-(5+1)*4");
+        homos.put(106, "114-5+1-4");
+        homos.put(105, "114+5-14");
+        homos.put(104, "114-5-1-4");
+        homos.put(103, "11*(4+5)+1*4");
+        homos.put(102, "11*(4+5)-1+4");
+        homos.put(101, "1+1*4*5*(1+4)");
+        homos.put(100, "1*(1+4)*5*1*4");
+        homos.put(99, "11*4+51+4");
+        homos.put(98, "1+1+4*(5+1)*4");
+        homos.put(97, "1+1*4*(5+1)*4");
+        homos.put(96, "11*(4+5)+1-4");
+        homos.put(95, "114-5-14");
+        homos.put(94, "114-5/1*4");
+        homos.put(93, "(1+1)*45-1+4");
+        homos.put(92, "(1+1)*(45-1)+4");
+        homos.put(91, "11*4+51-4");
+        homos.put(90, "-114+51*4");
+        homos.put(89, "(1+14)*5+14");
+        homos.put(88, "1*14*(5+1)+4");
+        homos.put(87, "11+4*(5+14)");
+        homos.put(86, "(1+1)*45*1-4");
+        homos.put(85, "1+14+5*14");
+        homos.put(84, "1*14+5*14");
+        homos.put(83, "-1+14+5*14");
+        homos.put(82, "1+1+4*5/1*4");
+        homos.put(81, "1/1+4*5*1*4");
+        homos.put(80, "1-1+4*5*1*4");
+        homos.put(79, "1*-1+4*5/1*4");
+        homos.put(78, "(1+1)*4+5*14");
+        homos.put(77, "11-4+5*14");
+        homos.put(76, "1+1+4+5*14");
+        homos.put(75, "1+14*5*1+4");
+        homos.put(74, "1/1*4+5*14");
+        homos.put(73, "1*14*5-1+4");
+        homos.put(72, "-1-1+4+5*14");
+        homos.put(71, "(1+14)*5-1*4");
+        homos.put(70, "11+45+14");
+        homos.put(69, "1*14+51+4");
+        homos.put(68, "1+1-4+5*14");
+        homos.put(67, "1-1*4+5*14");
+        homos.put(66, "1*14*5-1*4");
+        homos.put(65, "1*14*5-1-4");
+        homos.put(64, "11*4+5*1*4");
+        homos.put(63, "11*4+5+14");
+        homos.put(62, "1+14+51-4");
+        homos.put(61, "1+1+45+14");
+        homos.put(60, "11+45*1+4");
+        homos.put(59, "114-51-4");
+        homos.put(58, "-1+1*45+14");
+        homos.put(57, "1+14*5-14");
+        homos.put(56, "1*14*5-14");
+        homos.put(55, "-1+14*5-14");
+        homos.put(54, "11-4+51-4");
+        homos.put(53, "11+45+1-4");
+        homos.put(52, "11+45/1-4");
+        homos.put(51, "11+45-1-4");
+        homos.put(50, "1+1*45/1+4");
+        homos.put(49, "1*1*45/1+4");
+        homos.put(48, "-11+45+14");
+        homos.put(47, "1/-1+45-1+4");
+        homos.put(46, "11*4+5+1-4");
+        homos.put(45, "11+4*5+14");
+        homos.put(44, "114-5*14");
+        homos.put(43, "1+1*45+1-4");
+        homos.put(42, "11+45-14");
+        homos.put(41, "1/1*45*1-4");
+        homos.put(40, "-11+4*51/4");
+        homos.put(39, "-11+45+1+4");
+        homos.put(38, "-11+45*1+4");
+        homos.put(37, "-11+45-1+4");
+        homos.put(36, "11+4*5+1+4");
+        homos.put(35, "11*4+5-14");
+        homos.put(34, "1-14+51-4");
+        homos.put(33, "1+1+45-14");
+        homos.put(32, "1*1+45-14");
+        homos.put(31, "1/1*45-14");
+        homos.put(30, "1*-1+45-14");
+        homos.put(29, "-11+45-1-4");
+        homos.put(28, "11+4*5+1-4");
+        homos.put(27, "11+4*5/1-4");
+        homos.put(26, "11-4+5+14");
+        homos.put(25, "11*4-5-14");
+        homos.put(24, "1+14-5+14");
+        homos.put(23, "1*14-5+14");
+        homos.put(22, "1*14+5-1+4");
+        homos.put(21, "-1-1+4+5+14");
+        homos.put(20, "-11+45-14");
+        homos.put(19, "1+1+4*5+1-4");
+        homos.put(18, "1+1+4*5*1-4");
+        homos.put(17, "11+4*5-14");
+        homos.put(16, "11-4-5+14");
+        homos.put(15, "1+14-5+1+4");
+        homos.put(14, "11+4-5/1+4");
+        homos.put(13, "1*14-5/1+4");
+        homos.put(12, "-11+4+5+14");
+        homos.put(11, "11*-4+51+4");
+        homos.put(10, "-11/4+51/4");
+        homos.put(9, "11-4+5+1-4");
+        homos.put(8, "11-4+5/1-4");
+        homos.put(7, "11-4+5-1-4");
+        homos.put(6, "1-14+5+14");
+        homos.put(5, "11-4*5+14");
+        homos.put(4, "-11-4+5+14");
+        homos.put(3, "11*-4+51-4");
+        homos.put(2, "-11+4-5+14");
+        homos.put(1, "11/(45-1)*4");
+        homos.put(0, "(1-1)*4514");
+    }
+}
